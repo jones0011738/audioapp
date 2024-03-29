@@ -1,0 +1,10 @@
+version: '1'
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "5000:50"
+    volumes:
+      - ./flaskapp:/app
+    command: sh -c "flask --app main run --port 50 --host 0.0.0.0"

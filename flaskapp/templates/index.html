@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Upload Audio File</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+      body {
+        background-color: #3498db;
+        font-family: Arial, sans-serif;
+        margin: 0px;
+        padding: 20px;
+        position: relative;
+        width: 100vw;
+        height: 100vh
+      }
+
+      h1 {
+        color: #fff;
+      }
+
+      #uploadForm {
+        margin-bottom: 20px;
+      }
+
+      #result {
+        width: 100%;
+        height: 200px;
+        resize: none;
+      }
+
+      .loading-screen {
+        inset: 0px;
+        background-color: rgba(0,0,0,.93);
+        position: absolute;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .loading-div{
+        width:  350px;
+        height: 350px;
+        background-color: white;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        font-weight: bold;
+      }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $("#uploadForm").submit(function (event) {
+          event.preventDefault();
+          var formData = new FormData($(this)[0]);
+
+          $.ajax({
+            url: "/",
+            type: "POST",
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+              if ("result" in response) {
+                $("#result").val(response.result);
+              } else if ("error" in response) {
+                alert("Error: " + response.error);
+              }
+            },
+            error: function () {
+              alert("Error submitting the form.");
+            },
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="loading-screen" id="loading-screen">
+      <div class="loading-div">Processing ...</div>
+    </div>
+    <h1>Upload Audio File</h1>
+    <form id="uploadForm" method="POST" enctype="multipart/form-data">
+      <input type="file" name="file" accept="audio/*" />
+      <input type="submit" value="Process" />
+    </form>
+
+    <h2>Result:</h2>
+    <textarea id="result" rows="10" cols="50" readonly></textarea>
+  </body>
+</html>
